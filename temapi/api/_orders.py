@@ -3,7 +3,7 @@ from typing import List, Optional
 from aiohttp import ClientSession
 from pydantic import TypeAdapter
 
-from temapi._utils import build_url
+from temapi.api._utils import build_url
 from temapi.models import (
     CancelOrder,
     FillOrder,

@@ -1,7 +1,7 @@
 from aiohttp import ClientSession
 from pydantic import TypeAdapter
 
-from temapi._utils import build_url
+from temapi.api._utils import build_url
 from temapi.models._credit import Credit, Deposit, Withdraw
 
 

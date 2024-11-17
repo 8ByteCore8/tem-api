@@ -1,5 +1,3 @@
-from _utils import payment
-
 from temapi.api import (
     cancel_order,
     create_order,
@@ -29,6 +27,24 @@ from temapi.models import (
 )
 
 TEM_BASE_URL = "https://api.tronenergy.market"
+
+
+def payment(price: int, amount: int, duration: int) -> int:
+    """
+    Calculate the total payment for an order based on price, amount, and duration.
+
+    Args:
+        price (int): The price per unit of resource.
+        amount (int): The amount of resource being ordered.
+        duration (int): The duration for which the resource is being ordered.
+
+    Returns:
+        int: The total payment required for the order.
+    """
+    return int(
+        (price * amount * (duration + (86400 if duration < 86400 else 0))) / 86400
+    )
+
 
 __all__ = [
     TEM_BASE_URL,
