@@ -8,7 +8,7 @@ with open("./LICENSE") as f:
 
 setup(
     name="temapi",
-    version="0.1.3",
+    version="0.1.4",
     description="Python API lib for TEM (https://tronenergy.market/) ",
     long_description=readme,
     long_description_content_type="text/markdown",

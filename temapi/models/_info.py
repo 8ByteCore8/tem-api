@@ -69,7 +69,7 @@ class ReferralInfo(BaseModel):
 
 
 class RewardInfo(BaseModel):
-    toketId: str = Field(...)
+    tokenId: str = Field(...)
     exchangeId: int = Field(...)
     exchangeTokenAmount: int = Field(...)
     exchangeTrxAmount: int = Field(...)
