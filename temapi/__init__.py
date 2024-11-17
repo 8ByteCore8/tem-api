@@ -1,3 +1,18 @@
+from _utils import payment
+
+from temapi.api import (
+    cancel_order,
+    create_order,
+    credit,
+    deposit,
+    fill_order,
+    get_all_orders,
+    get_info,
+    get_order,
+    get_orders,
+    status,
+    withdraw,
+)
 from temapi.models import (
     CancelOrder,
     FillOrder,
@@ -29,4 +44,16 @@ __all__ = [
     Info,
     OrdersList,
     Resource,
+    cancel_order,
+    create_order,
+    credit,
+    deposit,
+    fill_order,
+    get_all_orders,
+    get_info,
+    get_order,
+    get_orders,
+    status,
+    withdraw,
+    payment,
 ]
