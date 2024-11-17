@@ -21,6 +21,7 @@ async def get_orders(
     skip: int = 0,
     take: int = 10,
     status: Optional[OrderStatus] = None,
+    address: Optional[str] = None,
 ) -> OrdersList:
     args = {
         "skip": skip,
@@ -28,6 +29,8 @@ async def get_orders(
     }
     if status is not None:
         args["status"] = status
+    if address is not None:
+        args["address"] = address
 
     response = await session.get(build_url("/order/list", args))
     response.raise_for_status()
@@ -38,13 +41,16 @@ async def get_all_orders(
     session: ClientSession,
     *,
     status: Optional[OrderStatus] = None,
+    address: Optional[str] = None,
 ) -> List[Order]:
     orders = list()
     skip = 0
     take = 100
 
     while True:
-        chunk = await get_orders(session=session, skip=skip, take=take, status=status)
+        chunk = await get_orders(
+            session=session, skip=skip, take=take, status=status, address=address
+        )
         chunk = chunk.list
         orders.extend(chunk)
         if len(chunk) < take:
