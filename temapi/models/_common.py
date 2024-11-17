@@ -1,6 +1,6 @@
 from enum import IntEnum, StrEnum
 
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 
 class Resource(IntEnum):
@@ -22,6 +22,6 @@ class MarketType(StrEnum):
     Fast = "Fast"
 
 
-class SignedMS:
+class SignedMS(BaseModel):
     message: str = Field(..., pattern=r"^te_\w+$")
     signature: str = Field(...)
