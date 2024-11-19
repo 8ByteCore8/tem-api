@@ -7,7 +7,7 @@ from temapi.models._common import MarketType, OrderStatus, OrderType, Resource, 
 
 
 class Order(BaseModel):
-    id: str = Field(...)
+    id: int = Field(...)
     type: OrderType = Field(...)
     market: MarketType = Field(...)
     origin: str = Field(...)
