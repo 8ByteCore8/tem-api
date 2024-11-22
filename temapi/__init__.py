@@ -26,7 +26,7 @@ from temapi.models import (
     SignedMS,
 )
 
-TEM_BASE_URL = "https://api.tronenergy.market"
+TEM_BASE_URL = "https://api.tronenergy.market/"
 
 
 def payment(price: int, amount: int, duration: int) -> int:
