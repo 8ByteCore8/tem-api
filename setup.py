@@ -11,9 +11,10 @@ extras_test = [
 ]
 
 setup(
-    name="temapi",
+    name="tem-api",
     keywords=[
         "tem",
+        "api",
         "tron",
     ],
     description="Python API lib for TEM (https://tronenergy.market/) ",
