@@ -1,1 +1,1 @@
-exclude Pipfile.lock Pipfile .gitignore .ruff_cache .github
+exclude Pipfile.lock Pipfile .gitignore .ruff_cache .github .eggs
