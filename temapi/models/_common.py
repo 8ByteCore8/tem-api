@@ -15,6 +15,7 @@ class OrderStatus(StrEnum):
 
 class OrderType(StrEnum):
     Public = "Public"
+    Internal = "Internal"
 
 
 class MarketType(StrEnum):
