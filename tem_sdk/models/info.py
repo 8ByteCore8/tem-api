@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import BaseModel, Field
 
 
@@ -11,12 +9,12 @@ class AvailableByPriceInfo(BaseModel):
 class MarketInfo(BaseModel):
     availableEnergy: float = Field(...)
     availableFastEnergy: float = Field(...)
-    availableEnergyByPrice: List[AvailableByPriceInfo] = Field([])
+    availableEnergyByPrice: list[AvailableByPriceInfo] = Field(default_factory=list)
     totalEnergy: int = Field(...)
     nextReleaseEnergy: int = Field(...)
     availableBandwidth: float = Field(...)
     availableFastBandwidth: float = Field(...)
-    availableBandwidthByPrice: List[AvailableByPriceInfo] = Field([])
+    availableBandwidthByPrice: list[AvailableByPriceInfo] = Field(default_factory=list)
     totalBandwidth: int = Field(...)
     nextReleaseBandwidth: int = Field(...)
     energyPerTrxFrozen: float = Field(...)
@@ -25,18 +23,18 @@ class MarketInfo(BaseModel):
     trxPerBandwidthFee: float = Field(...)
 
 
-class PriceInfoItem(BaseModel):
+class PriceInfo(BaseModel):
     minDuration: int = Field(...)
     basePrice: int = Field(...)
     minPoolPrice: int = Field(...)
     suggestedPrice: int = Field(...)
 
 
-class PriceInfo(BaseModel):
-    openEnergy: List[PriceInfoItem] = Field([])
-    fastEnergy: List[PriceInfoItem] = Field([])
-    openBandwidth: List[PriceInfoItem] = Field([])
-    fastBandwidth: List[PriceInfoItem] = Field([])
+class PricesInfo(BaseModel):
+    openEnergy: list[PriceInfo] = Field(default_factory=list)
+    fastEnergy: list[PriceInfo] = Field(default_factory=list)
+    openBandwidth: list[PriceInfo] = Field(default_factory=list)
+    fastBandwidth: list[PriceInfo] = Field(default_factory=list)
 
 
 class OrderInfo(BaseModel):
@@ -46,9 +44,9 @@ class OrderInfo(BaseModel):
     suggestedBandwidth: int = Field(...)
     minFillEnergy: int = Field(...)
     minFillBandwidth: int = Field(...)
-    openDurations: List[int] = Field([])
+    openDurations: list[int] = Field(default_factory=list)
     openSuggestedDuration: int = Field(...)
-    fastDurations: List[int] = Field([])
+    fastDurations: list[int] = Field(default_factory=list)
     fastSuggestedDuration: int = Field(...)
     publicTime: int = Field(...)
     fillOrderAward: float = Field(...)
@@ -84,7 +82,7 @@ class TronInfo(BaseModel):
 class Info(BaseModel):
     address: str = Field(...)
     market: MarketInfo = Field(...)
-    price: PriceInfo = Field(...)
+    price: PricesInfo = Field(...)
     order: OrderInfo = Field(...)
     pool: PoolInfo = Field(...)
     credit: CreditInfo = Field(...)

@@ -1,7 +1,5 @@
 from enum import IntEnum, StrEnum
 
-from pydantic import BaseModel, Field
-
 
 class Resource(IntEnum):
     Energy = 0
@@ -21,8 +19,3 @@ class OrderType(StrEnum):
 class MarketType(StrEnum):
     Open = "Open"
     Fast = "Fast"
-
-
-class SignedMS(BaseModel):
-    message: str = Field(..., pattern=r"^te_\w+$")
-    signature: str = Field(...)
