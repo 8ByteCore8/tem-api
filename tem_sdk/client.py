@@ -26,9 +26,23 @@ from tem_sdk.models.responses import (
 
 
 class TemClient:
+    """
+    A client for interacting with the Tron Energy Market API.
+
+    This class provides methods to perform various operations such as checking
+    API status, retrieving market information, managing orders, and handling
+    account balances.
+    """
+
     __client__: AsyncClient
 
     async def __aenter__(self) -> "TemClient":
+        """
+        Enter the asynchronous context manager.
+
+        Returns:
+            TemClient: The instance of the client.
+        """
         await self.__client__.__aenter__()
         return self
 
@@ -40,12 +54,12 @@ class TemClient:
         Calculate the total payment for an order based on price, amount, and duration.
 
         Args:
-            price (int): The price per unit of resource.
-            amount (int): The amount of resource being ordered.
-            duration (int): The duration for which the resource is being ordered.
+            price (Decimal | int): The price per unit of resource.
+            amount (Decimal | int): The amount of resource being ordered.
+            duration (Decimal | int): The duration for which the resource is being ordered.
 
         Returns:
-            int: The total payment required for the order.
+            Decimal: The total payment required for the order.
         """
         day = Decimal(86400)
         price = Decimal(price)
@@ -57,10 +71,28 @@ class TemClient:
 
     @staticmethod
     def convert_sun_to_trx(sun: Decimal | int) -> Decimal:
+        """
+        Convert SUN to TRX.
+
+        Args:
+            sun (Decimal | int): The amount in SUN.
+
+        Returns:
+            Decimal: The equivalent amount in TRX.
+        """
         return Decimal(sun) / Decimal(1_000_000)
 
     @staticmethod
     def convert_trx_to_sun(trx: Decimal | int | float) -> Decimal:
+        """
+        Convert TRX to SUN.
+
+        Args:
+            trx (Decimal | int | float): The amount in TRX.
+
+        Returns:
+            Decimal: The equivalent amount in SUN.
+        """
         return (Decimal(trx) * Decimal(1_000_000)).quantize(
             Decimal("1."), rounding=ROUND_DOWN
         )
@@ -71,6 +103,17 @@ class TemClient:
         exc_value: BaseException | None = None,
         traceback: TracebackType | None = None,
     ) -> Coroutine[Any, Any, None]:
+        """
+        Exit the asynchronous context manager.
+
+        Args:
+            exc_type (type[BaseException] | None): The exception type, if any.
+            exc_value (BaseException | None): The exception value, if any.
+            traceback (TracebackType | None): The traceback, if any.
+
+        Returns:
+            Coroutine[Any, Any, None]: The coroutine for exiting the context.
+        """
         return self.__client__.__aexit__(
             exc_type,
             exc_value,
@@ -85,6 +128,12 @@ class TemClient:
         self.__client__ = AsyncClient(base_url=base_url)
 
     async def check_status(self):
+        """
+        Check the status of the API.
+
+        Returns:
+            bool: True if the API is reachable and operational, False otherwise.
+        """
         try:
             response = await self.__client__.get("/status")
             return response.is_success
@@ -92,30 +141,51 @@ class TemClient:
             return False
 
     async def get_market_info(self) -> Info:
-        """Get market info"""
+        """
+        Retrieve market information.
+
+        Returns:
+            Info: The market information.
+        """
         response = await self.__client__.get("/info")
         response.raise_for_status()
         return Info(
             **(GetMarketInfoResponse.model_validate_json(response.content)).model_dump()
         )
 
-    async def get_balance(self, account_address: str) -> Decimal:
-        """Get account balance in SUN"""
-        response = await self.__client__.get(
-            "/credit", params={"address": account_address}
-        )
+    async def get_balance(self, account: str) -> Decimal:
+        """
+        Get the account balance in SUN.
+
+        Args:
+            account (str): The address of the account.
+
+        Returns:
+            Decimal: The account balance in SUN.
+        """
+        response = await self.__client__.get("/credit", params={"address": account})
         response.raise_for_status()
         return GetBalanceResponse.model_validate_json(response.content).value
 
     async def deposit_balance(
         self,
-        account_address: str,
+        account: str,
         signed_tx: str,
     ) -> None:
+        """
+        Deposit balance into the account.
+
+        Args:
+            account (str): The address of the account.
+            signed_tx (str): The signed transaction for the deposit.
+
+        Returns:
+            None
+        """
         response = await self.__client__.post(
             url="/credit/deposit",
             json=BalanceDepositRequest(
-                address=account_address,
+                address=account,
                 signed_tx=signed_tx,
             ).model_dump(mode="json", exclude_none=True, exclude_unset=True),
         )
@@ -123,14 +193,25 @@ class TemClient:
 
     async def withdraw_balance(
         self,
-        account_address: str,
+        account: str,
         signed_ms: SignedMS,
         amount: int | Decimal | None = None,
     ) -> None:
+        """
+        Withdraw balance from the account.
+
+        Args:
+            account (str): The address of the account.
+            signed_ms (SignedMS): The signed multisignature for the withdrawal.
+            amount (int | Decimal | None): The amount to withdraw (optional).
+
+        Returns:
+            None
+        """
         response = await self.__client__.post(
             url="/credit/withdraw",
             json=BalanceWithdrawRequest(
-                address=account_address,
+                address=account,
                 amount=Decimal(amount) if amount else None,
                 signed_ms=signed_ms,
             ).model_dump(mode="json", exclude_none=True, exclude_unset=True),
@@ -143,27 +224,49 @@ class TemClient:
         skip: int = 0,
         take: int = 1000,
         status: OrderStatus | None = None,
-        account_address: str | None = None,
+        account: str | None = None,
     ) -> list[Order]:
+        """
+        Retrieve a list of orders.
+
+        Args:
+            skip (int): The number of orders to skip.
+            take (int): The number of orders to retrieve.
+            status (OrderStatus | None): The status of the orders to filter by (optional).
+            account (str | None): The account address to filter by (optional).
+
+        Returns:
+            list[Order]: The list of orders.
+        """
         params: dict[str, str] = {
             "skip": str(skip),
             "limit": str(take),
         }
         if status is not None:
             params["status"] = status.value
-        if account_address is not None:
-            params["address"] = account_address
+        if account is not None:
+            params["address"] = account
 
         response = await self.__client__.get("/order/list", params=params)
         response.raise_for_status()
-        return GetOrdersResponse.model_validate_json(response.content).list
+        return GetOrdersResponse.model_validate_json(response.content).orders
 
     async def get_all_orders(
         self,
         *,
         status: OrderStatus | None = None,
-        account_address: str | None = None,
+        account: str | None = None,
     ) -> list[Order]:
+        """
+        Retrieve all orders, optionally filtered by status or account address.
+
+        Args:
+            status (OrderStatus | None): The status of the orders to filter by (optional).
+            account (str | None): The account address to filter by (optional).
+
+        Returns:
+            list[Order]: The list of all orders.
+        """
         orders = set()
         skip = 0
         take = 1000
@@ -173,7 +276,7 @@ class TemClient:
                 skip=skip,
                 take=take,
                 status=status,
-                account_address=account_address,
+                account=account,
             )
             orders.update(chunk)
             if len(chunk) < take:
@@ -183,11 +286,21 @@ class TemClient:
         return list(orders)
 
     async def get_order(self, order_id: int) -> Order:
+        """
+        Retrieve details of a specific order.
+
+        Args:
+            order_id (int): The ID of the order.
+
+        Returns:
+            Order: The details of the order.
+        """
         params = {
             "id": str(order_id),
         }
 
         response = await self.__client__.get("/order/info", params=params)
+        print(response.url)
         response.raise_for_status()
         return Order(
             **(GetOrderResponse.model_validate_json(response.content).model_dump())
@@ -196,7 +309,7 @@ class TemClient:
     async def create_order(
         self,
         market: MarketType,
-        account_address: str,
+        account: str,
         target: str | list[str],
         resource: Resource,
         amount: Decimal | int,
@@ -206,12 +319,34 @@ class TemClient:
         api_key: str | None = None,
         signed_ms: SignedMS | None = None,
         signed_tx: str | None = None,
-    ) -> int:
+    ) -> Decimal:
+        """
+        Create a new order.
+
+        Args:
+            market (MarketType): The market mode (e.g., Open or Fast).
+            account (str): The address placing the order.
+            target (str | list[str]): Target address or list of addresses for bulk orders.
+            resource (Resource): The resource type (e.g., Energy, Bandwidth).
+            amount (Decimal | int): The amount of resource to rent.
+            duration (Decimal | int): The duration of the order in seconds.
+            price (Decimal | int): The price per unit of the resource (in SUN).
+            partfill (bool): Whether partial fills are allowed (default: True).
+            api_key (str | None): Optional API key; if provided, signature fields are ignored.
+            signed_ms (SignedMS | None): Optional multisignature payload for signed requests.
+            signed_tx (str | None): Optional signed TRX transaction for signed requests.
+
+        Returns:
+            int: The ID of the created order.
+
+        Notes:
+            The `payment` field sent to the API is computed from `price`, `amount`, and `duration`.
+        """
         response = await self.__client__.post(
             "/order/new",
             json=CreateOrderRequest(
                 market=market,
-                address=account_address,
+                address=account,
                 target=target,
                 payment=self.calculate_order_payment(price, amount, duration),
                 resource=resource,
@@ -224,20 +359,32 @@ class TemClient:
             ).model_dump(mode="json"),
         )
         response.raise_for_status()
-        return CreateOrderResponse.model_validate_json(response.content).order
+        return CreateOrderResponse.model_validate_json(response.content).order_id
 
     async def fill_order(
         self,
         order_id: int,
-        account_address: str,
+        account: str,
         signed_tx: str,
         target: str | None = None,
     ) -> None:
+        """
+        Fill an existing order.
+
+        Args:
+            order_id (int): The ID of the order to fill.
+            account (str): The address of the account filling the order.
+            signed_tx (str): The signed transaction for the fill.
+            target (str | None): The target address for the fill (optional).
+
+        Returns:
+            None
+        """
         response = await self.__client__.post(
             "/order/fill",
             json=FillOrderRequest(
                 id=order_id,
-                address=account_address,
+                address=account,
                 signed_tx=signed_tx,
                 origin_address=target,
             ).model_dump(mode="json", exclude_none=True, exclude_unset=True),
@@ -245,13 +392,24 @@ class TemClient:
         response.raise_for_status()
 
     async def cancel_order(
-        self, order_id: int, account_address: str, signed_ms: SignedMS
+        self, order_id: int, account: str, signed_ms: SignedMS
     ) -> None:
+        """
+        Cancel an existing order.
+
+        Args:
+            order_id (int): The ID of the order to cancel.
+            account (str): The address of the account canceling the order.
+            signed_ms (SignedMS): The signed multisignature for the cancellation.
+
+        Returns:
+            None
+        """
         response = await self.__client__.post(
             "/order/cancel",
             json=CancelOrderRequest(
                 order=order_id,
-                address=account_address,
+                address=account,
                 signed_ms=signed_ms,
             ).model_dump(mode="json", exclude_none=True, exclude_unset=True),
         )

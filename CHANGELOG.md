@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.0.0]
 
+- Update `README.md`
+- Add validation aliases for `Response` models
+- Add docstrings
+- Add `Cancelled` order status
 - Rewrite lib to class based client
 - Migrate to uv
 
