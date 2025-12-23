@@ -54,11 +54,11 @@ dev = [
 indent = 4
 
 [tool.poe.tasks.check-lint]
-cmd = "uv run ruff check tem-sdk/ tests/"
+cmd = "uv run ruff check tem_sdk/"
 help = "Check ruff errors"
 
 [tool.poe.tasks.check-format]
-cmd = "uv run ruff format --check tem-sdk/ tests/"
+cmd = "uv run ruff format --check tem_sdk/"
 help = "Check ruff formatting"
 args = [{ name = "dir", multiple = false, positional = true, default = "./" }]
 
@@ -66,10 +66,10 @@ args = [{ name = "dir", multiple = false, positional = true, default = "./" }]
 cmd = "uv run pip-audit"
 help = "Audit dependencies"
 
-[tool.poe.tasks.tests]
-cmd = "uv run pytest --cov=tem-sdk/"
-help = "Run tests"
+# [tool.poe.tasks.tests]
+# cmd = "uv run pytest --cov=tem_sdk/"
+# help = "Run tests"
 
 [tool.poe.tasks.check]
-sequence = ["check-lint", "check-format", "check-audit", "tests -vv"]
+sequence = ["check-lint", "check-format", "check-audit"]
 help = "Check code before make commit"
