@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.0.0]
 
+- Change `int` and `float` to `Decimal` at `Info`
 - Update `README.md`
 - Add validation aliases for `Response` models
 - Add docstrings

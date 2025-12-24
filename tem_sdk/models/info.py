@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from pydantic import AliasChoices, BaseModel, Field
 
 
@@ -10,14 +12,15 @@ class AvailableByPriceInfo(BaseModel):
         value (float): The amount of resource available at this price.
     """
 
-    price: int = Field(
+    price: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "price",
             "Price",
         ),
     )
-    value: float = Field(
+    value: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "value",
@@ -47,7 +50,7 @@ class MarketInfo(BaseModel):
         trxPerBandwidthFee (float): Transaction cost (TRX) per bandwidth fee.
     """
 
-    available_energy: float = Field(
+    available_energy: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "available_energy",
@@ -55,7 +58,7 @@ class MarketInfo(BaseModel):
             "AvailableEnergy",
         ),
     )
-    available_fast_energy: float = Field(
+    available_fast_energy: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "available_fast_energy",
@@ -71,23 +74,25 @@ class MarketInfo(BaseModel):
             "AvailableEnergyByPrice",
         ),
     )
-    total_energy: int = Field(
+    total_energy: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "total_energy",
             "totalEnergy",
             "TotalEnergy",
         ),
     )
-    next_release_energy: int = Field(
+    next_release_energy: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "next_release_energy",
             "nextReleaseEnergy",
             "NextReleaseEnergy",
         ),
     )
-    available_bandwidth: float = Field(
+    available_bandwidth: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "available_bandwidth",
@@ -95,7 +100,7 @@ class MarketInfo(BaseModel):
             "AvailableBandwidth",
         ),
     )
-    available_fast_bandwidth: float = Field(
+    available_fast_bandwidth: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "available_fast_bandwidth",
@@ -111,23 +116,25 @@ class MarketInfo(BaseModel):
             "AvailableBandwidthByPrice",
         ),
     )
-    total_bandwidth: int = Field(
+    total_bandwidth: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "total_bandwidth",
             "totalBandwidth",
             "TotalBandwidth",
         ),
     )
-    next_release_bandwidth: int = Field(
+    next_release_bandwidth: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "next_release_bandwidth",
             "nextReleaseBandwidth",
             "NextReleaseBandwidth",
         ),
     )
-    energy_per_trx_frozen: float = Field(
+    energy_per_trx_frozen: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "energy_per_trx_frozen",
@@ -135,7 +142,7 @@ class MarketInfo(BaseModel):
             "EnergyPerTrxFrozen",
         ),
     )
-    bandwidth_per_trx_frozen: float = Field(
+    bandwidth_per_trx_frozen: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "bandwidth_per_trx_frozen",
@@ -143,7 +150,7 @@ class MarketInfo(BaseModel):
             "BandwidthPerTrxFrozen",
         ),
     )
-    trx_per_energy_fee: float = Field(
+    trx_per_energy_fee: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "trx_per_energy_fee",
@@ -151,7 +158,7 @@ class MarketInfo(BaseModel):
             "TrxPerEnergyFee",
         ),
     )
-    trx_per_bandwidth_fee: float = Field(
+    trx_per_bandwidth_fee: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "trx_per_bandwidth_fee",
@@ -166,38 +173,42 @@ class PriceInfo(BaseModel):
     Price-related constraints and suggestions for a particular queue (open/fast, energy/bandwidth).
 
     Attributes:
-        minDuration (int): Minimum duration (in seconds) allowed for orders in this price tier.
-        basePrice (int): Base price for this tier.
-        minPoolPrice (int): Minimum pool price threshold.
-        suggestedPrice (int): Suggested price to use for this tier.
+        min_duration (Decimal): Minimum duration (in seconds) allowed for orders in this price tier.
+        base_price (Decimal): Base price for this tier.
+        min_pool_price (Decimal): Minimum pool price threshold.
+        suggested_price (Decimal): Suggested price to use for this tier.
     """
 
-    min_duration: int = Field(
+    min_duration: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_duration",
             "minDuration",
             "MinDuration",
         ),
     )
-    base_price: int = Field(
+    base_price: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "base_price",
             "basePrice",
             "BasePrice",
         ),
     )
-    min_pool_price: int = Field(
+    min_pool_price: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_pool_price",
             "minPoolPrice",
             "MinPoolPrice",
         ),
     )
-    suggested_price: int = Field(
+    suggested_price: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "suggested_price",
             "suggestedPrice",
@@ -271,48 +282,54 @@ class OrderInfo(BaseModel):
         cancellationFee (int): Fee charged for canceling an order (in SUN).
     """
 
-    min_energy: int = Field(
+    min_energy: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_energy",
             "minEnergy",
             "MinEnergy",
         ),
     )
-    suggested_energy: int = Field(
+    suggested_energy: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "suggested_energy",
             "suggestedEnergy",
             "SuggestedEnergy",
         ),
     )
-    min_bandwidth: int = Field(
+    min_bandwidth: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_bandwidth",
             "minBandwidth",
             "MinBandwidth",
         ),
     )
-    suggested_bandwidth: int = Field(
+    suggested_bandwidth: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "suggested_bandwidth",
             "suggestedBandwidth",
             "SuggestedBandwidth",
         ),
     )
-    min_fill_energy: int = Field(
+    min_fill_energy: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_fill_energy",
             "minFillEnergy",
             "MinFillEnergy",
         ),
     )
-    min_fill_bandwidth: int = Field(
+    min_fill_bandwidth: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_fill_bandwidth",
             "minFillBandwidth",
@@ -359,7 +376,7 @@ class OrderInfo(BaseModel):
             "PublicTime",
         ),
     )
-    fill_order_award: float = Field(
+    fill_order_award: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "fill_order_award",
@@ -367,8 +384,9 @@ class OrderInfo(BaseModel):
             "FillOrderAward",
         ),
     )
-    cancellation_fee: int = Field(
+    cancellation_fee: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "cancellation_fee",
             "cancellationFee",
@@ -394,20 +412,22 @@ class CreditInfo(BaseModel):
     Configuration and constraints for credit (deposit/withdraw) operations.
 
     Attributes:
-        minAmount (int): Minimum amount (in SUN) that can be deposited/credited.
-        minTimeToWithdraw (int): Minimum time (in seconds) that must pass before a withdrawal is allowed.
+        min_amount (Decimal): Minimum amount (in SUN) that can be deposited/credited.
+        min_time_to_withdraw (Decimal): Minimum time (in seconds) that must pass before a withdrawal is allowed.
     """
 
-    min_amount: int = Field(
+    min_amount: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_amount",
             "minAmount",
             "MinAmount",
         ),
     )
-    min_time_to_withdraw: int = Field(
+    min_time_to_withdraw: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "min_time_to_withdraw",
             "minTimeToWithdraw",
@@ -424,7 +444,7 @@ class ReferralInfo(BaseModel):
         reward (float): Reward percentage or amount provided by the referral program.
     """
 
-    reward: float = Field(
+    reward: Decimal = Field(
         ...,
         validation_alias=AliasChoices(
             "reward",
@@ -452,7 +472,7 @@ class RewardInfo(BaseModel):
             "TokenId",
         ),
     )
-    exchange_id: int = Field(
+    exchange_id: str = Field(
         ...,
         validation_alias=AliasChoices(
             "exchange_id",
@@ -460,16 +480,18 @@ class RewardInfo(BaseModel):
             "ExchangeId",
         ),
     )
-    exchange_token_amount: int = Field(
+    exchange_token_amount: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "exchange_token_amount",
             "exchangeTokenAmount",
             "ExchangeTokenAmount",
         ),
     )
-    exchange_trx_amount: int = Field(
+    exchange_trx_amount: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "exchange_trx_amount",
             "exchangeTrxAmount",
