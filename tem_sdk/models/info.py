@@ -472,8 +472,9 @@ class RewardInfo(BaseModel):
             "TokenId",
         ),
     )
-    exchange_id: str = Field(
+    exchange_id: Decimal = Field(
         ...,
+        decimal_places=0,
         validation_alias=AliasChoices(
             "exchange_id",
             "exchangeId",
